@@ -3,9 +3,18 @@ import openmeteo_requests
 import pandas as pd
 import requests_cache
 from retry_requests import retry
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"], # change to frontend url later
+    allow_credentials=True,
+    allow_methods=["GET", "POST"],
+    allow_headers=["*"],
+)
 
 def get_weather():
 	# Setup the Open-Meteo API client with cache and retry on error
@@ -20,9 +29,13 @@ def get_weather():
 		"latitude": 59.20,
 		"longitude": 10.76,
 		"hourly": "temperature_2m",
-		"timezone": "Europe/Berlin",
+		"timezone": "auto",
 	}
-	responses = openmeteo.weather_api(url, params = params)
+	return openmeteo.weather_api(url, params = params)
+
+def get_temp():
+
+	responses = get_weather()
 
 	# Process first location. Add a for-loop for multiple locations or weather models
 	response = responses[0]
@@ -60,5 +73,5 @@ def root():
 
 @app.get("/weather")
 def weather():
-	data = get_weather()
+	data = get_temp()
 	return {"hourly": data}

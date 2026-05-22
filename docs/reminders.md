@@ -12,6 +12,5 @@
 - Sketch
 
 ### General
-- Installation guide
-- Maintenance guide
 - Sketch product in draw.io
+- Timezone being auto means the timezone is automatically resolved given the coordinates
