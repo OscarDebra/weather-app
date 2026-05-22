@@ -3,5 +3,4 @@ requests-cache
 retry-requests 
 numpy 
 pandas
-uvicorn
-fastapi
+fastapi[standard]

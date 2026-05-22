@@ -6,8 +6,7 @@
 - Add rate limiting and throttling
 
 ### Backend
-- Containerize
-- Feature for city instead of coordinates
+- Feature for city input instead of coordinates
 
 ### Frontend
 - Sketch

@@ -61,5 +61,4 @@ def root():
 @app.get("/weather")
 def weather():
 	data = get_weather()
-	print("Hello")
 	return {"hourly": data}
