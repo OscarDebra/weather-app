@@ -67,11 +67,11 @@ def get_temp():
 
 	return hourly_dataframe.to_dict(orient="records")
 
-@app.get("/")
+@app.get("/api/health")
 def root():
 	return {"message": "Weather API is running"}
 
-@app.get("/weather")
+@app.get("/api/weather")
 def weather():
 	data = get_temp()
 	return {"hourly": data}
