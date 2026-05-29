@@ -3,8 +3,13 @@ import openmeteo_requests
 import pandas as pd
 import requests_cache
 from retry_requests import retry
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from slowapi import Limiter
+from slowapi.util import get_remote_address
+from slowapi.middleware import SlowAPIMiddleware
+from slowapi.errors import RateLimitExceeded
+from fastapi.responses import JSONResponse
 
 app = FastAPI()
 
@@ -15,6 +20,13 @@ app.add_middleware(
     allow_methods=["GET", "POST"],
     allow_headers=["*"],
 )
+
+# Initialize rate limiter
+limiter = Limiter(key_func=get_remote_address)
+app.state.limiter = limiter
+app.add_middleware(SlowAPIMiddleware)
+
+
 
 def get_weather():
 	# Setup the Open-Meteo API client with cache and retry on error
@@ -33,8 +45,9 @@ def get_weather():
 	}
 	return openmeteo.weather_api(url, params = params)
 
-def get_temp():
 
+
+def get_temp():
 	responses = get_weather()
 
 	# Process first location. Add a for-loop for multiple locations or weather models
@@ -67,11 +80,26 @@ def get_temp():
 
 	return hourly_dataframe.to_dict(orient="records")
 
+
+
 @app.get("/api/health")
-def root():
+@limiter.limit("10/minute")
+def root(request: Request):
 	return {"message": "Weather API is running"}
 
+
+
 @app.get("/api/weather")
-def weather():
+@limiter.limit("10/minute")
+def weather(request: Request):
 	data = get_temp()
 	return {"hourly": data}
+
+
+
+@app.exception_handler(RateLimitExceeded)
+def rate_limit_handler(request: Request, exc: RateLimitExceeded):
+    return JSONResponse(
+        status_code=429,
+        content={"detail": "Too many requests"}
+    )

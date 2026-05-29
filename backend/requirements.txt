@@ -1,6 +1,7 @@
-openmeteo-requests
-requests-cache
-retry-requests
+openmeteo-requests # A library for making requests to the Open-Meteo API
+requests-cache # Caching for HTTP requests to improve performance and reduce redundant calls
+retry-requests # Retry logic for HTTP requests
 numpy
 pandas
 fastapi[standard]
+slowapi # Rate limiting

@@ -2,7 +2,7 @@
 
 - Add input sanitation and validation of data before using it in a query.
 - Add a strong authentication and authorization library like bcrypt.
-- Add rate limiting and throttling
+- Add caching for city inputs
 
 ### Backend
 - Feature for city input instead of coordinates

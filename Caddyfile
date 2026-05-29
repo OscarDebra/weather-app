@@ -2,7 +2,7 @@ Oscars-MacBook-Pro.local {
 
     tls internal
 
-    handle_path /api/* {
+    handle /api/* {
         reverse_proxy backend:8000
     }
 
@@ -11,13 +11,13 @@ Oscars-MacBook-Pro.local {
     }
 
     header {
-    X-Content-Type-Options nosniff
-    X-Frame-Options DENY
-    Referrer-Policy no-referrer
+        X-Content-Type-Options nosniff
+        X-Frame-Options DENY
+        Referrer-Policy no-referrer
     }
 
     log {
-    output stdout
-    format console
+        output stdout
+        format console
     }
 }

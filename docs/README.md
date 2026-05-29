@@ -15,12 +15,20 @@ This project currenty has a frontend and backend container with 3 endpoints.
 
 # About the project
 
-This is going to be a fullstack weather app, with a python fastapi backend connecting to a weather api. The frontend will be in react.
+This project consists of three docker containers. One frontend container in react, a backend container using fastapi and a caddy container.
 
-## Architecture
+The physical architecture consists of a raspberry pi, but is currently hosted on a macbook while under development, but the raspi can be substituted for anything. Other devices request the service by being on the same network and entering the local hostname into their browser, which is Oscars-MacBook-Pro.local right now. Potentially could host using AWS later down the line.
 
-The physical architecture consists of a raspberry pi, but can be substituted for anything, other devices request the service by being on the same network and entering the ip into their browser. Potentially could host using AWS.
+The backend is a simple container that retrieves weather data from an api when requested using openmeteo's free, no API key service.
 
-For the backend we are using fastapi, a simple container that retrieves weather data from an api when requested using openmeteo's free, no API key service.
+The frontend will call on the backend whenever the user selects a location.
 
-The frontend is in react, it will call on the backend whenever the user selects a location.
+## Security measures
+- Https with caddy private certification authority (equivalent to self-cert)
+- Basic CORS headers in main.py file using CORSMiddleware
+- Basic security headers in Caddyfile
+- Reverse proxy with caddy
+- Docker isolation
+- Rate limiting in fastapi with slowapi
+
+
