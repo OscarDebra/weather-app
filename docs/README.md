@@ -7,7 +7,7 @@
 
 # User guide
 
-This project currenty has a frontend and backend container with 3 api endpoints.
+This project currenty has a frontend and backend container with 3 endpoints.
 
 1. To verify if the app is working on your device, first make sure you are on the same network, then visit `http://Oscars-MacBook-Pro.local`, where the ip is the ip of the device where the container is hosted, this is the frontend.
 2. The second endpoint is located at `http://Oscars-MacBook-Pro.local/api/weather` and currently returns the projected temperature each hour for the next week at a very specific location.
@@ -21,6 +21,6 @@ This is going to be a fullstack weather app, with a python fastapi backend conne
 
 The physical architecture consists of a raspberry pi, but can be substituted for anything, other devices request the service by being on the same network and entering the ip into their browser. Potentially could host using AWS.
 
-For the backend we are using fastapi, a simple container that retrieves weather data from an api when requested.
+For the backend we are using fastapi, a simple container that retrieves weather data from an api when requested using openmeteo's free, no API key service.
 
-The frontend is in react, it calls on the backend whenever the user selects a location.
+The frontend is in react, it will call on the backend whenever the user selects a location.
