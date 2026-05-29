@@ -1,6 +1,6 @@
-openmeteo-requests 
-requests-cache 
-retry-requests 
-numpy 
+openmeteo-requests
+requests-cache
+retry-requests
+numpy
 pandas
 fastapi[standard]

@@ -5,7 +5,7 @@ services:
     restart: unless-stopped
     expose:
       - "8000"
-  
+
   frontend:
     build: ./frontend
     container_name: frontend
@@ -17,8 +17,17 @@ services:
     image: caddy:latest
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
     depends_on:
       - frontend
       - backend
+
+
+
+volumes:
+  caddy_data:
+  caddy_config:

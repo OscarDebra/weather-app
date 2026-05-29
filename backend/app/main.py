@@ -10,7 +10,7 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # change to frontend url later
+    allow_origins=["https://Oscars-MacBook-Pro.local"], 
     allow_credentials=True,
     allow_methods=["GET", "POST"],
     allow_headers=["*"],
