@@ -19,7 +19,7 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://weather-app.local"], 
+    allow_origins=["https://oscar-raspberry-pi.local"], 
     allow_credentials=True,
     allow_methods=["GET", "POST"],
     allow_headers=["*"],
