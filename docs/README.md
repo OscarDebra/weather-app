@@ -3,12 +3,13 @@
 ## Installation and setup
 
 1. Run `git clone https://github.com/OscarDebra/weather-app.git` to clone the project on your device.
-2. Run `docker compose up --build` while in the weather-app folder to build the project on the device.
-3. To verify it's working visit the backend container on the device where the container is hosted by searching `http://localhost`.
-4. To open the container on another device, find the ip of the device where the container is hosted, then visit `http://http://Oscars-MacBook-Pro.local`
-5. Create an admin user by first going into the create_admin.py file found in the /app directory in the /backend directory, change the password variable to your own password. Next run the create_admin.py file by running `docker compose exec backend python -m app.create_admin`. You will need to log in with this user to access protected endpoints.
-5. To shut it down, run `docker compose down`
-6. To turn it back on at a later time, run `docker compose up`, you do not need to rebuild each time.
+2. Create a new file in root called .env and copy over the contents of the .env.example file inside it, then replace the secret key with a long string of random characters (32-64 characters). You can, for example run the command `openssl rand -hex 32` to create a secret key of length 32.
+3. Run `docker compose up --build` while in the weather-app folder to build the project on the device.
+4. To verify it's working visit the backend container on the device where the container is hosted by searching `http://localhost`.
+5. To open the container on another device, find the ip of the device where the container is hosted, then visit `http://http://Oscars-MacBook-Pro.local`
+6. Create an admin user by first going into the create_admin.py file found in the /app directory in the /backend directory, change the password variable to your own password. Next run the create_admin.py file by running `docker compose exec backend python -m app.create_admin`. You will need to log in with this user to access protected endpoints.
+7. To shut it down, run `docker compose down`
+8. To turn it back on at a later time, run `docker compose up`, you do not need to rebuild each time.
 
 
 # User guide
