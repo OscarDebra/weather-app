@@ -1,4 +1,6 @@
-# Installation and setup
+# Admin guide
+
+## Installation and setup
 
 1. Run `git clone https://github.com/OscarDebra/weather-app.git` to clone the project on your device.
 2. Run `docker compose up --build` while in the weather-app folder to build the project on the device.

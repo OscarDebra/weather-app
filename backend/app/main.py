@@ -19,7 +19,7 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://Oscars-MacBook-Pro.local"], 
+    allow_origins=["https://weather-app.local"], 
     allow_credentials=True,
     allow_methods=["GET", "POST"],
     allow_headers=["*"],
@@ -112,7 +112,10 @@ def weather(
 
 @app.post("/api/login")
 @limiter.limit("10/minute")
-def login(data: LoginRequest):
+def login(
+    request: Request,
+    data: LoginRequest
+):
 
     conn = get_connection()
     cursor = conn.cursor()
@@ -140,6 +143,7 @@ def login(data: LoginRequest):
 @app.post("/api/admin/create_user")
 @limiter.limit("10/minute")
 def create_user(
+    request: Request,
     data: CreateUserRequest,
     admin=Depends(get_admin_user)
 ):
@@ -195,7 +199,11 @@ def create_user(
 
 @app.get("/api/admin/users")
 @limiter.limit("10/minute")
-def list_users(admin_user=Depends(get_admin_user)):
+def list_users(
+    request: Request,
+    admin_user=Depends(get_admin_user)
+):
+    
     conn = get_connection()
     cursor = conn.cursor()
     
