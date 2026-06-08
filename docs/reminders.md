@@ -15,3 +15,5 @@
 - Timezone being auto means the timezone is automatically resolved given the coordinates
 
 - when finishing up and swiching permanently to the raspi, switch oscars-macbook-pro.local to raspi.local. You need to change it in the readme file, in the caddy file and in the main.py file.
+
+- Host pimonitor backend container on the pi, host frontend on mac during exam

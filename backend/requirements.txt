@@ -5,3 +5,7 @@ numpy
 pandas
 fastapi[standard]
 slowapi # Rate limiting
+
+# For authentication
+passlib
+python-jose[cryptography]

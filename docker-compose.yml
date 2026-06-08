@@ -3,8 +3,12 @@ services:
     build: ./backend
     container_name: backend
     restart: unless-stopped
+    volumes:
+      - ./backend/data:/code/data
     expose:
       - "8000"
+    env_file:
+      - .env
 
   frontend:
     build: ./frontend

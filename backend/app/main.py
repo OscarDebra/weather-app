@@ -1,9 +1,8 @@
 import openmeteo_requests
-
 import pandas as pd
 import requests_cache
 from retry_requests import retry
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from slowapi import Limiter
 from slowapi.util import get_remote_address
@@ -11,7 +10,12 @@ from slowapi.middleware import SlowAPIMiddleware
 from slowapi.errors import RateLimitExceeded
 from fastapi.responses import JSONResponse
 
+from app.database import get_connection, init_db
+from app.schemas import LoginRequest, CreateUserRequest
+from app.security import verify_password, create_access_token, get_user, get_admin_user, hash_password
+
 app = FastAPI()
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -82,19 +86,127 @@ def get_temp():
 
 
 
+@app.on_event("startup")
+def startup():
+    init_db()
+
+
+
 @app.get("/api/health")
 @limiter.limit("10/minute")
-def root(request: Request):
+def health(request: Request):
 	return {"message": "Weather API is running"}
 
 
 
 @app.get("/api/weather")
 @limiter.limit("10/minute")
-def weather(request: Request):
+def weather(
+    request: Request,
+    user=Depends(get_user)
+):
 	data = get_temp()
 	return {"hourly": data}
 
+
+
+@app.post("/api/login")
+@limiter.limit("10/minute")
+def login(data: LoginRequest):
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "SELECT * FROM users WHERE username = ?",
+        (data.username,)
+    )
+
+    user = cursor.fetchone()
+    conn.close()
+
+    if not user:
+        raise HTTPException(401, "Invalid credentials")
+
+    if not verify_password(data.password, user["password_hash"]):
+        raise HTTPException(401, "Invalid credentials")
+
+    token = create_access_token(user["username"])
+
+    return {"access_token": token}
+
+
+
+@app.post("/api/admin/create_user")
+@limiter.limit("10/minute")
+def create_user(
+    data: CreateUserRequest,
+    admin=Depends(get_admin_user)
+):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "SELECT id FROM users WHERE username = ?",
+        (data.username,)
+    )
+
+    existing_user = cursor.fetchone()
+
+    if existing_user:
+        conn.close()
+        raise HTTPException(
+            status_code=409,
+            detail="Username already exists"
+        )
+
+    password_hash = hash_password(data.password)
+
+    cursor.execute(
+        """
+        INSERT INTO users
+        (
+            username,
+            password_hash,
+            is_admin
+        )
+        VALUES (?, ?, ?)
+        """,
+        (
+            data.username,
+            password_hash,
+            int(data.is_admin)
+        )
+    )
+
+    conn.commit()
+
+    user_id = cursor.lastrowid
+
+    conn.close()
+
+    return {
+        "id": user_id,
+        "username": data.username,
+        "is_admin": data.is_admin
+    }
+
+
+
+@app.get("/api/admin/users")
+@limiter.limit("10/minute")
+def list_users(admin_user=Depends(get_admin_user)):
+    conn = get_connection()
+    cursor = conn.cursor()
+    
+    cursor.execute("SELECT id, username, is_admin FROM users")
+    users = cursor.fetchall()
+
+    conn.close()
+
+    return {
+        "users": [dict(u) for u in users]
+    }
 
 
 @app.exception_handler(RateLimitExceeded)
