@@ -30,7 +30,10 @@
 
 - Admin endpoints can only be accessed with a token given by logging into an admin account. Admins can create and administer accounts as well as everything that user accounts can.
 
-- The create account endpoint can be used in the terminal by running `curl -k -X POST https://HOSTNAME.local/api/admin/create_user -H "Authorization: Bearer TOKEN" -H "Content-Type: application/json" -d '{"username":"USERNAME", "password":"PASSWORD", "is_admin":ISADMIN}'`, making sure to replace the TOKEN, USERNAME, PASSWORD and ISADMIN fields, type 1 or 0 for ISADMIN. This creates a new user that can be used while calling the login endpoint to receive an authentication token. 
+- The create account endpoint can be used in the terminal by running `curl -k -X POST "https://oscar-raspberry-pi.local/api/admin/create_user" \
+  -H "Authorization: Bearer TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"username":"USER","password":"USER","is_admin":ISADMIN}'`, making sure to replace the TOKEN, USERNAME, PASSWORD and ISADMIN fields, type 1 or 0 for ISADMIN. This creates a new user that can be used while calling the login endpoint to receive an authentication token. 
 - The users endpoint can be reached in the terminal by running `curl -k "https://HOSTNAME.local/api/admin/users" -H "Authorization: Bearer TOKEN"`, making sure to replace the TOKEN field. THis returns a list of the users that currently exist within the database.
 - The delete users endpoint can be reached in the terminal by running `curl -k -X DELETE https://weather-app.local/api/admin/users -H "Authorization: Bearer TOKEN" -H "Content-Type: application/json" -d '{"username":"USERNAME"}'`, making sure to replace the TOKEN and USERNAME field.
 - The replace password endpoint can be reached in the terminal by running `curl -k -X PUT https://weather-app.local/api/admin/users/password -H "Authorization: Bearer TOKEN" -H "Content-Type: application/json" -d '{"username":"USERNAME", "new_password":"NEWPASSWORD"}'`, making sure to replace the TOKEN, USERNAME and NEWPASSWORD fields.
