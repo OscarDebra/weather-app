@@ -107,3 +107,6 @@ Data can be deleted in the following ways:
 - Deleting the users.db file
 - Reinitializing the database using the provided reinitialization script
 
+### Security risk
+
+Right now the JWT token is stored in localstorage in the frontend instead of as a cookie, this makes the frontend vulnerable to XSS, if a hacker receives an admin JWT, they can reach endpoints to delete users, change their passwords.

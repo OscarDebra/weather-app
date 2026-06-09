@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "react-router-dom": "^7.17.0",
+    "react-simple-maps": "^3.0.0"
+  },
+  "devDependencies": {
+    "@types/react-simple-maps": "^3.0.6"
+  }
+}
