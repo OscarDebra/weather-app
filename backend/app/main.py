@@ -11,7 +11,7 @@ from slowapi.errors import RateLimitExceeded
 from fastapi.responses import JSONResponse
 
 from app.database import get_connection, init_db
-from app.schemas import LoginRequest, CreateUserRequest
+from app.schemas import LoginRequest, CreateUserRequest, DeleteUserRequest, ChangePasswordRequest
 from app.security import verify_password, create_access_token, get_user, get_admin_user, hash_password
 
 app = FastAPI()
@@ -214,6 +214,88 @@ def list_users(
 
     return {
         "users": [dict(u) for u in users]
+    }
+
+
+@app.delete("/api/admin/users")
+def delete_user(
+    data: DeleteUserRequest,
+    current_user=Depends(get_admin_user)
+):
+    if data.username == current_user["username"]:
+        raise HTTPException(
+            status_code=400,
+            detail="You cannot delete your own account"
+        )
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "SELECT id FROM users WHERE username = ?",
+        (data.username,)
+    )
+
+    user = cursor.fetchone()
+
+    if not user:
+        conn.close()
+        raise HTTPException(
+            status_code=404,
+            detail="User not found"
+        )
+
+    cursor.execute(
+        "DELETE FROM users WHERE username = ?",
+        (data.username,)
+    )
+
+    conn.commit()
+    conn.close()
+
+    return {
+        "message": f"User '{data.username}' deleted"
+    }
+
+
+@app.put("/api/admin/users/password")
+def change_user_password(
+    data: ChangePasswordRequest,
+    current_user=Depends(get_admin_user)
+):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "SELECT id FROM users WHERE username = ?",
+        (data.username,)
+    )
+
+    user = cursor.fetchone()
+
+    if not user:
+        conn.close()
+        raise HTTPException(
+            status_code=404,
+            detail="User not found"
+        )
+
+    password_hash = hash_password(data.new_password)
+
+    cursor.execute(
+        """
+        UPDATE users
+        SET password_hash = ?
+        WHERE username = ?
+        """,
+        (password_hash, data.username)
+    )
+
+    conn.commit()
+    conn.close()
+
+    return {
+        "message": f"Password updated for '{data.username}'"
     }
 
 

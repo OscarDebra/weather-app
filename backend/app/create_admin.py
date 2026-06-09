@@ -1,7 +1,7 @@
 from app.database import get_connection
 from app.security import hash_password
 
-password = "Jeanne59!"
+password = "admin"
 
 conn = get_connection()
 cursor = conn.cursor()
