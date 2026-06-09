@@ -28,7 +28,7 @@ export default function Login() {
       // store token
       localStorage.setItem("token", data.access_token);
 
-      setMessage("Login successful" + data.access_token);
+      setMessage("Login successful, token: " + data.access_token);
     } catch (err) {
       setMessage("Network error");
     }
